@@ -58,6 +58,11 @@ function navActive(string $path, string $current): string {
                 <i class="bi bi-person-gear me-2"></i> Accounts
             </a>
         </li>
+        <li class="nav-item">
+            <a href="/users" class="nav-link <?= navActive('/users', $currentPath) ?>">
+                <i class="bi bi-people-fill me-2"></i> Gebruikers
+            </a>
+        </li>
         <?php endif; ?>
     </ul>
 

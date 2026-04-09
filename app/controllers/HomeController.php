@@ -1,19 +1,24 @@
 <?php
 /**
- * HomeController – homepage
+ * HomeController – landingspagina
  */
 class HomeController
 {
     public function index(): void
     {
-        // Als ingelogd, redirect naar dashboard
-        if (isset($_SESSION['user_id'])) {
+        // Niet ingelogd → naar login
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: /login');
+            exit;
+        }
+
+        // Alleen directie krijgt de lege landingspagina
+        if ($_SESSION['role'] !== 'Directie') {
             header('Location: /dashboard');
             exit;
         }
 
-        // Anders redirect naar login
-        header('Location: /login');
-        exit;
+        $pageTitle = 'Home – ' . APP_NAME;
+        require APP_ROOT . '/app/views/home/index.php';
     }
 }

@@ -205,7 +205,8 @@ INSERT INTO rollen (rolnaam) VALUES ('Directie'),('Magazijnmedewerker'),('Vrijwi
 
 -- Wachtwoord voor alle accounts: Welkom123
 -- Hash gegenereerd met password_hash('Welkom123', PASSWORD_BCRYPT)
+-- Wachtwoord voor alle accounts: Welkom123
 INSERT INTO gebruikers (gebruikersnaam, wachtwoord_hash, rol_id, actief) VALUES
-('directie_anne',      '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 1, TRUE),
-('magazijn_piet',      '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 2, TRUE),
-('vrijwilliger_sanne', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 3, TRUE);
+('directie_anne',      '$2y$12$ktyvv771i3IbzjVil6O6KOBj2zgOWhQ6nzCh16yvAwmgPqrg4f0f.', 1, TRUE),
+('magazijn_piet',      '$2y$12$ktyvv771i3IbzjVil6O6KOBj2zgOWhQ6nzCh16yvAwmgPqrg4f0f.', 2, TRUE),
+('vrijwilliger_sanne', '$2y$12$ktyvv771i3IbzjVil6O6KOBj2zgOWhQ6nzCh16yvAwmgPqrg4f0f.', 3, TRUE);

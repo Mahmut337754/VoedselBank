@@ -34,7 +34,8 @@ class AuthController
                     $_SESSION['username']  = $user['gebruikersnaam'];
                     $_SESSION['role']      = $user['rolnaam'];
                     $_SESSION['rol_id']    = $user['rol_id'];
-                    $this->redirect('/dashboard');
+                    $destination = ($user['rolnaam'] === 'Directie') ? '/' : '/dashboard';
+                    $this->redirect($destination);
                 } else {
                     $error = 'Ongeldige gebruikersnaam of wachtwoord.';
                 }
