@@ -1,0 +1,1 @@
+{"version":2,"defects":{"KlantTest::testDeleteKlantWithNoPackages":7},"times":{"KlantTest::testCreateKlant":0.243,"KlantTest::testUpdateKlant":0.215,"KlantTest::testDeleteKlantWithNoPackages":0.22,"KlantTest::testWensenKoppelen":0.222}}
