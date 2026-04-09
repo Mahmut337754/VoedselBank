@@ -9,15 +9,38 @@
  * @package App\Models
  */
 
-require_once APP_ROOT . '/app/config/database.php';
-
 class Klant
 {
     private PDO $db;
 
     public function __construct()
     {
-        $this->db = Database::getConnection(); // PDO verbinding
+        // Laad database configuratie (array) - ABSOLUUT PAD gebruiken
+        $configPath = APP_ROOT . '/app/config/database.php';
+        if (!file_exists($configPath)) {
+            die("Configuratiebestand niet gevonden: " . $configPath);
+        }
+
+        $dbConfig = require $configPath;
+
+        // Controleer of alle benodigde sleutels bestaan
+        $required = ['host', 'dbname', 'user', 'pass', 'charset'];
+        foreach ($required as $key) {
+            if (!isset($dbConfig[$key])) {
+                die("Database configuratie mist sleutel: " . $key);
+            }
+        }
+
+        // DSN string opbouwen
+        $dsn = "mysql:host={$dbConfig['host']};dbname={$dbConfig['dbname']};charset={$dbConfig['charset']}";
+
+        try {
+            $this->db = new PDO($dsn, $dbConfig['user'], $dbConfig['pass']);
+            $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            die("Database verbinding mislukt: " . $e->getMessage());
+        }
     }
 
     /**
@@ -29,7 +52,7 @@ class Klant
     {
         $sql = "SELECT * FROM klanten ORDER BY gezinsnaam ASC";
         $stmt = $this->db->query($sql);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     /**
@@ -43,7 +66,7 @@ class Klant
         $sql = "SELECT * FROM klanten WHERE klant_id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([':id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch();
     }
 
     /**
@@ -122,7 +145,7 @@ class Klant
      */
     public function deleteKlant(int $id): bool
     {
-        // Optioneel: eerst controleren of er pakketten bestaan
+        // Eerst controleren of er pakketten bestaan
         $checkSql = "SELECT COUNT(*) FROM voedselpakketten WHERE klant_id = :id";
         $checkStmt = $this->db->prepare($checkSql);
         $checkStmt->execute([':id' => $id]);
@@ -148,7 +171,7 @@ class Klant
     {
         $sql = "SELECT * FROM wensen ORDER BY naam";
         $stmt = $this->db->query($sql);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     /**
