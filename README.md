@@ -9,6 +9,7 @@ De applicatie ondersteunt een voedselbank bij het beheren van klanten, producten
 
 * CRUD voor klanten, producten, leveranciers en voedselpakketten
 * Dashboard met navigatie
+* Leveranciersoverzicht toegankelijk via de dashboardkaart "Leveranciers"
 * Authenticatie (login/registratie)
 * Database met relaties (MySQL)
 * MVC-structuur toegepast
