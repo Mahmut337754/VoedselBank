@@ -40,6 +40,12 @@ function formatDeliveryDate(?string $value): string
 				</div>
 			<?php endif; ?>
 
+			<?php if (!empty($actionError)): ?>
+				<div class="alert alert-danger" role="alert">
+					<?= htmlspecialchars($actionError) ?>
+				</div>
+			<?php endif; ?>
+
 			<?php if (!empty($error)): ?>
 				<div class="alert alert-danger d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3" role="alert">
 					<div>
@@ -88,9 +94,17 @@ function formatDeliveryDate(?string $value): string
 												</td>
 												<td><?= htmlspecialchars(formatDeliveryDate($leverancier['eerstvolgende_levering'])) ?></td>
 												<td class="text-end">
-													<a href="/leveranciers/<?= (int)$leverancier['leverancier_id'] ?>/wijzigen" class="btn btn-sm btn-outline-primary">
-														<i class="bi bi-pencil-square me-1"></i>Wijzigen
-													</a>
+													<div class="d-inline-flex gap-1">
+														<a href="/leveranciers/<?= (int)$leverancier['leverancier_id'] ?>/wijzigen" class="btn btn-sm btn-outline-primary">
+															<i class="bi bi-pencil-square me-1"></i>Wijzigen
+														</a>
+														<form method="POST" action="/leveranciers/<?= (int)$leverancier['leverancier_id'] ?>/verwijderen" class="d-inline" onsubmit="return confirm('Weet je zeker dat je deze leverancier wilt verwijderen?');">
+															<input type="hidden" name="id" value="<?= (int)$leverancier['leverancier_id'] ?>">
+															<button type="submit" class="btn btn-sm btn-outline-danger">
+																<i class="bi bi-trash me-1"></i>Verwijderen
+															</button>
+														</form>
+													</div>
 												</td>
 											</tr>
 										<?php endforeach; ?>
