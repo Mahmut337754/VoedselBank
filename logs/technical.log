@@ -1,0 +1,18 @@
+[2026-04-09 10:54:39] [INFO] Klantenoverzicht bekeken door directie_anne
+[2026-04-09 10:54:39] [INFO] Klantenoverzicht bekeken door directie_anne
+[2026-04-09 10:54:39] [INFO] Klantenoverzicht bekeken door directie_anne
+[2026-04-09 11:06:19] [INFO] Klantenoverzicht bekeken door directie_anne
+[2026-04-09 11:06:21] [INFO] Klantenoverzicht bekeken door directie_anne
+[2026-04-09 11:06:31] [INFO] Nieuw klantformulier geladen
+[2026-04-09 11:06:42] [WARNING] Validatiefouten bij aanmaken klant: Voer een geldige Nederlandse postcode in (bijv. 1234AB).
+[2026-04-09 11:06:42] [INFO] Nieuw klantformulier geladen
+[2026-04-09 11:06:46] [INFO] Nieuwe klant aangemaakt: ID 1, naam Jansen, email 337754@student.mboutrecht.nl
+[2026-04-09 11:06:46] [DEBUG] Wensen gekoppeld aan klant ID 1: 2
+[2026-04-09 11:06:46] [INFO] Klantenoverzicht bekeken door directie_anne
+[2026-04-09 11:07:53] [INFO] Klantenoverzicht bekeken door directie_anne
+[2026-04-09 11:07:55] [INFO] Nieuw klantformulier geladen
+[2026-04-09 11:08:08] [WARNING] Validatiefouten bij aanmaken klant: Voer een geldige Nederlandse postcode in (bijv. 1234AB).
+[2026-04-09 11:08:08] [INFO] Nieuw klantformulier geladen
+[2026-04-09 11:08:12] [INFO] Nieuwe klant aangemaakt: ID 2, naam Bakkerkat, email admin@traveleasy.nl
+[2026-04-09 11:08:12] [DEBUG] Wensen gekoppeld aan klant ID 2: 5
+[2026-04-09 11:08:12] [INFO] Klantenoverzicht bekeken door directie_anne
