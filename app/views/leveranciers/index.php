@@ -24,10 +24,21 @@ function formatDeliveryDate(?string $value): string
 					<h5 class="fw-bold mb-1">Leveranciersoverzicht</h5>
 					<p class="text-muted mb-0">Alle leveranciers, gesorteerd op eerstvolgende levering.</p>
 				</div>
-				<a href="/dashboard" class="btn btn-outline-secondary">
-					<i class="bi bi-arrow-left me-1"></i>Terug naar dashboard
-				</a>
+				<div class="d-flex gap-2">
+					<a href="/leveranciers/nieuw" class="btn btn-primary">
+						<i class="bi bi-plus-lg me-1"></i>Leverancier Toevoegen
+					</a>
+					<a href="/dashboard" class="btn btn-outline-secondary">
+						<i class="bi bi-arrow-left me-1"></i>Terug naar dashboard
+					</a>
+				</div>
 			</div>
+
+			<?php if (!empty($success)): ?>
+				<div class="alert alert-success" role="alert">
+					<?= htmlspecialchars($success) ?>
+				</div>
+			<?php endif; ?>
 
 			<?php if (!empty($error)): ?>
 				<div class="alert alert-danger d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3" role="alert">

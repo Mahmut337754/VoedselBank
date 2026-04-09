@@ -199,6 +199,11 @@ return [
         'controller' => 'LeverancierController',
         'method' => 'create'
     ],
+
+    '/leveranciers/nieuw' => [
+        'controller' => 'LeverancierController',
+        'method' => 'create'
+    ],
  
     '/leveranciers/store' => [
         'controller' => 'LeverancierController',
