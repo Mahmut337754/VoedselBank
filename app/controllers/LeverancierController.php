@@ -150,12 +150,129 @@ class LeverancierController
 
 	public function edit(): void
 	{
-		$this->notAvailable();
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			$this->update();
+			return;
+		}
+
+		$id = (int)($_GET['id'] ?? 0);
+		if ($id <= 0) {
+			header('Location: /leveranciers');
+			exit;
+		}
+
+		$pageTitle = 'Leverancier Wijzigen - ' . APP_NAME;
+		$error = null;
+		$fieldErrors = [];
+
+		try {
+			$leverancier = $this->leverancierModel->findById($id);
+			if (!$leverancier) {
+				$_SESSION['success_message'] = 'Leverancier niet gevonden.';
+				header('Location: /leveranciers');
+				exit;
+			}
+
+			$formData = [
+				'bedrijfsnaam' => (string)$leverancier['bedrijfsnaam'],
+				'adres' => (string)$leverancier['adres'],
+				'postcode' => (string)$leverancier['postcode'],
+				'plaats' => (string)$leverancier['plaats'],
+				'contactpersoon' => (string)$leverancier['contactpersoon'],
+				'email_contact' => (string)$leverancier['email_contact'],
+				'telefoon' => (string)$leverancier['telefoon'],
+				'eerstvolgende_levering' => date('Y-m-d\TH:i', strtotime((string)$leverancier['eerstvolgende_levering'])),
+			];
+		} catch (Throwable $exception) {
+			$this->logTechnical('LEVERANCIER_EDIT_LOAD_ERROR', [
+				'message' => $exception->getMessage(),
+				'leverancier_id' => $id,
+				'user_id' => $_SESSION['user_id'] ?? null,
+			]);
+			$_SESSION['success_message'] = 'De leveranciergegevens konden niet worden geladen.';
+			header('Location: /leveranciers');
+			exit;
+		}
+
+		require APP_ROOT . '/app/views/leveranciers/edit.php';
 	}
 
 	public function update(): void
 	{
-		$this->notAvailable();
+		$id = (int)($_GET['id'] ?? ($_POST['id'] ?? 0));
+		if ($id <= 0) {
+			header('Location: /leveranciers');
+			exit;
+		}
+
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+			header('Location: /leveranciers/' . $id . '/wijzigen');
+			exit;
+		}
+
+		$pageTitle = 'Leverancier Wijzigen - ' . APP_NAME;
+		$error = null;
+		$fieldErrors = [];
+		$formData = [
+			'bedrijfsnaam' => trim($_POST['bedrijfsnaam'] ?? ''),
+			'adres' => trim($_POST['adres'] ?? ''),
+			'postcode' => trim($_POST['postcode'] ?? ''),
+			'plaats' => trim($_POST['plaats'] ?? ''),
+			'contactpersoon' => trim($_POST['contactpersoon'] ?? ''),
+			'email_contact' => trim($_POST['email_contact'] ?? ''),
+			'telefoon' => trim($_POST['telefoon'] ?? ''),
+			'eerstvolgende_levering' => trim($_POST['eerstvolgende_levering'] ?? ''),
+		];
+
+		foreach ($formData as $key => $value) {
+			if ($value === '') {
+				$fieldErrors[$key] = 'Dit veld is verplicht.';
+			}
+		}
+
+		if ($formData['email_contact'] !== '' && !filter_var($formData['email_contact'], FILTER_VALIDATE_EMAIL)) {
+			$fieldErrors['email_contact'] = 'Het e-mailadres heeft geen geldig formaat.';
+		}
+
+		if ($formData['eerstvolgende_levering'] !== '' && strtotime($formData['eerstvolgende_levering']) === false) {
+			$fieldErrors['eerstvolgende_levering'] = 'Vul een geldige datum en tijd in.';
+		}
+
+		if (!empty($fieldErrors)) {
+			$error = 'Controleer de ingevulde gegevens en probeer opnieuw.';
+			require APP_ROOT . '/app/views/leveranciers/edit.php';
+			return;
+		}
+
+		$formData['eerstvolgende_levering'] = date('Y-m-d H:i:s', strtotime($formData['eerstvolgende_levering']));
+
+		try {
+			if ($this->leverancierModel->existsByBedrijfsnaamExceptId($formData['bedrijfsnaam'], $id)) {
+				$fieldErrors['bedrijfsnaam'] = 'Er bestaat al een leverancier met dezelfde bedrijfsnaam.';
+				$error = 'Er bestaat al een leverancier met dezelfde bedrijfsnaam.';
+				require APP_ROOT . '/app/views/leveranciers/edit.php';
+				return;
+			}
+
+			$this->leverancierModel->update($id, $formData);
+			$this->logTechnical('LEVERANCIER_UPDATED', [
+				'leverancier_id' => $id,
+				'bedrijfsnaam' => $formData['bedrijfsnaam'],
+				'user_id' => $_SESSION['user_id'] ?? null,
+			]);
+
+			$_SESSION['success_message'] = 'Leverancier is succesvol gewijzigd.';
+			header('Location: /leveranciers');
+			exit;
+		} catch (Throwable $exception) {
+			$this->logTechnical('LEVERANCIER_UPDATE_ERROR', [
+				'message' => $exception->getMessage(),
+				'leverancier_id' => $id,
+				'user_id' => $_SESSION['user_id'] ?? null,
+			]);
+			$error = 'De wijzigingen konden niet worden opgeslagen. Probeer het opnieuw.';
+			require APP_ROOT . '/app/views/leveranciers/edit.php';
+		}
 	}
 
 	public function delete(): void
