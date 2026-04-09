@@ -77,7 +77,7 @@ function formatDeliveryDate(?string $value): string
 									<?php else: ?>
 										<?php foreach ($leveranciers as $leverancier): ?>
 											<tr>
-												<td class="fw-semibold"><?= htmlspecialchars($leverancier['bedrijfsnaam']) ?></td>
+												<td class="fw-semibold"><a class="text-decoration-none" href="/leveranciers/<?= (int)$leverancier['leverancier_id'] ?>/wijzigen"><?= htmlspecialchars($leverancier['bedrijfsnaam']) ?></a></td>
 												<td><?= htmlspecialchars($leverancier['contactpersoon']) ?></td>
 												<td><a href="mailto:<?= htmlspecialchars($leverancier['email_contact']) ?>" class="text-decoration-none"><?= htmlspecialchars($leverancier['email_contact']) ?></a></td>
 												<td><?= htmlspecialchars($leverancier['telefoon']) ?></td>
