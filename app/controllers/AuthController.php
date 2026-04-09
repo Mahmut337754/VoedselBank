@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AuthController – inloggen en uitloggen
  */

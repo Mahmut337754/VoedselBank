@@ -203,10 +203,9 @@ INSERT INTO leveringen (leverancier_id, product_id, hoeveelheid, leverdatum) VAL
 
 INSERT INTO rollen (rolnaam) VALUES ('Directie'),('Magazijnmedewerker'),('Vrijwilliger');
 
+-- Nieuwe correcte hashes voor alle rollen
 -- Wachtwoord voor alle accounts: Welkom123
--- Hash gegenereerd met password_hash('Welkom123', PASSWORD_BCRYPT)
--- Wachtwoord voor alle accounts: Welkom123
-INSERT INTO gebruikers (gebruikersnaam, wachtwoord_hash, rol_id, actief) VALUES
-('directie_anne',      '$2y$12$ktyvv771i3IbzjVil6O6KOBj2zgOWhQ6nzCh16yvAwmgPqrg4f0f.', 1, TRUE),
-('magazijn_piet',      '$2y$12$ktyvv771i3IbzjVil6O6KOBj2zgOWhQ6nzCh16yvAwmgPqrg4f0f.', 2, TRUE),
-('vrijwilliger_sanne', '$2y$12$ktyvv771i3IbzjVil6O6KOBj2zgOWhQ6nzCh16yvAwmgPqrg4f0f.', 3, TRUE);
+
+INSERT INTO gebruikers (gebruikersnaam, wachtwoord_hash, rol_id, actief)
+VALUES ('directie_anne', '$2y$10$4EcKdm1IjWbvQqFTYRdUCeyV2udouIWyiYUefQcZk.A785Fage96u', 1, 1)
+ON DUPLICATE KEY UPDATE wachtwoord_hash = VALUES(wachtwoord_hash), rol_id = VALUES(rol_id), actief = VALUES(actief);
