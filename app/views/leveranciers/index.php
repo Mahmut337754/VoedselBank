@@ -67,12 +67,13 @@ function formatDeliveryDate(?string $value): string
 										<th>Telefoon</th>
 										<th>Adres</th>
 										<th>Eerstvolgende levering</th>
+										<th class="text-end">Acties</th>
 									</tr>
 								</thead>
 								<tbody>
 									<?php if (empty($leveranciers)): ?>
 										<tr>
-											<td colspan="6" class="text-center text-muted py-4">Er zijn nog geen leveranciers gevonden.</td>
+											<td colspan="7" class="text-center text-muted py-4">Er zijn nog geen leveranciers gevonden.</td>
 										</tr>
 									<?php else: ?>
 										<?php foreach ($leveranciers as $leverancier): ?>
@@ -86,6 +87,11 @@ function formatDeliveryDate(?string $value): string
 													<span class="text-muted small"><?= htmlspecialchars($leverancier['postcode']) ?> <?= htmlspecialchars($leverancier['plaats']) ?></span>
 												</td>
 												<td><?= htmlspecialchars(formatDeliveryDate($leverancier['eerstvolgende_levering'])) ?></td>
+												<td class="text-end">
+													<a href="/leveranciers/<?= (int)$leverancier['leverancier_id'] ?>/wijzigen" class="btn btn-sm btn-outline-primary">
+														<i class="bi bi-pencil-square me-1"></i>Wijzigen
+													</a>
+												</td>
 											</tr>
 										<?php endforeach; ?>
 									<?php endif; ?>
