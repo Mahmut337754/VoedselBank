@@ -234,6 +234,11 @@ return [
         'controller' => 'LeverancierController',
         'method' => 'delete'
     ],
+
+    '/leveranciers/{id}/verwijderen' => [
+        'controller' => 'LeverancierController',
+        'method' => 'delete'
+    ],
  
     /**
      * --------------------------------------------------------

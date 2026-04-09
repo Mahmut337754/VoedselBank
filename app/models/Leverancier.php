@@ -194,4 +194,18 @@ class Leverancier extends BaseModel
 			]);
 		}
 	}
+
+	public function delete(int $id): bool
+	{
+		try {
+			$statement = $this->db->prepare('CALL sp_leverancier_verwijderen(?)');
+			$statement->execute([$id]);
+			$statement->closeCursor();
+
+			return true;
+		} catch (Throwable $exception) {
+			$statement = $this->db->prepare('DELETE FROM leveranciers WHERE leverancier_id = ?');
+			return $statement->execute([$id]);
+		}
+	}
 }
