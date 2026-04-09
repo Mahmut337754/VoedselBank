@@ -46,7 +46,7 @@
                             <i class="bi bi-truck fs-2 text-warning"></i>
                             <div>
                                 <div class="text-muted small">Leveranciers</div>
-                                <a href="/leveranciers" class="stretched-link text-decoration-none fw-bold">Beheren</a>
+                                <a href="/leveranciers" class="stretched-link text-decoration-none fw-bold">Overzicht</a>
                             </div>
                         </div>
                     </div>
