@@ -30,7 +30,9 @@ class LeverancierController
 		$leveranciers = [];
 		$error = null;
 		$success = $_SESSION['success_message'] ?? null;
+		$actionError = $_SESSION['action_error'] ?? null;
 		unset($_SESSION['success_message']);
+		unset($_SESSION['action_error']);
 
 		try {
 			$leveranciers = $this->leverancierModel->getAllOrderedByNextDelivery();
@@ -277,7 +279,45 @@ class LeverancierController
 
 	public function delete(): void
 	{
-		$this->notAvailable();
+		$id = (int)($_GET['id'] ?? ($_POST['id'] ?? 0));
+		if ($id <= 0) {
+			header('Location: /leveranciers');
+			exit;
+		}
+
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+			header('Location: /leveranciers');
+			exit;
+		}
+
+		try {
+			$leverancier = $this->leverancierModel->findById($id);
+			if (!$leverancier) {
+				$_SESSION['action_error'] = 'Leverancier niet gevonden.';
+				header('Location: /leveranciers');
+				exit;
+			}
+
+			$this->leverancierModel->delete($id);
+			$this->logTechnical('LEVERANCIER_DELETED', [
+				'leverancier_id' => $id,
+				'bedrijfsnaam' => $leverancier['bedrijfsnaam'] ?? null,
+				'user_id' => $_SESSION['user_id'] ?? null,
+			]);
+
+			$_SESSION['success_message'] = 'Leverancier is succesvol verwijderd.';
+			header('Location: /leveranciers');
+			exit;
+		} catch (Throwable $exception) {
+			$this->logTechnical('LEVERANCIER_DELETE_ERROR', [
+				'message' => $exception->getMessage(),
+				'leverancier_id' => $id,
+				'user_id' => $_SESSION['user_id'] ?? null,
+			]);
+			$_SESSION['action_error'] = 'De leverancier kon niet worden verwijderd. Controleer of er nog gekoppelde leveringen zijn.';
+			header('Location: /leveranciers');
+			exit;
+		}
 	}
 
 	private function notAvailable(): void
