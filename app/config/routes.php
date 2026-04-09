@@ -219,12 +219,17 @@ return [
         'controller' => 'LeverancierController',
         'method' => 'edit'
     ],
+
+    '/leveranciers/{id}/wijzigen' => [
+        'controller' => 'LeverancierController',
+        'method' => 'edit'
+    ],
  
     '/leveranciers/update' => [
         'controller' => 'LeverancierController',
         'method' => 'update'
     ],
- 
+
     '/leveranciers/delete' => [
         'controller' => 'LeverancierController',
         'method' => 'delete'
