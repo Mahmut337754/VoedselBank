@@ -13,12 +13,22 @@ use Illuminate\Support\Facades\Log;
 class VoorraadController extends Controller
 {
     /**
-     * US-Read: Toon overzicht van alle voorraadartikelen via sp_get_all_voorraad.
+     * US-Read: Toon overzicht van alle voorraadartikelen.
+     * Ondersteunt optionele filtering op categorie via dropdown.
      */
     public function index(Request $request)
     {
         try {
-            $voorraad = DB::table('product as p')
+            // Haal alle categorieën op voor de dropdown
+            $categorieen = DB::table('categorie')
+                ->where('is_actief', 1)
+                ->orderBy('naam')
+                ->get();
+
+            $geselecteerdeCategorie = $request->input('categorie_id');
+            $gefiltered = $request->has('toon_voorraad');
+
+            $query = DB::table('product as p')
                 ->leftJoin('categorie as c', 'p.categorie_id', '=', 'c.id')
                 ->leftJoin('product_per_magazijn as ppm', 'p.id', '=', 'ppm.product_id')
                 ->leftJoin('magazijn as m', 'ppm.magazijn_id', '=', 'm.id')
@@ -36,15 +46,22 @@ class VoorraadController extends Controller
                     'ppm.locatie'
                 )
                 ->orderBy('c.naam')
-                ->orderBy('p.naam')
-                ->get();
+                ->orderBy('p.naam');
+
+            // Filter op categorie als geselecteerd
+            if ($gefiltered && $geselecteerdeCategorie) {
+                $query->where('p.categorie_id', $geselecteerdeCategorie);
+            }
+
+            $voorraad = $query->get();
 
             Log::info('[Voorraad] Overzicht bekeken', [
-                'gebruiker_id' => auth()->id(),
-                'aantal_items' => count($voorraad),
+                'gebruiker_id'        => auth()->id(),
+                'aantal_items'        => count($voorraad),
+                'categorie_filter'    => $geselecteerdeCategorie,
             ]);
 
-            return view('voorraad.index', compact('voorraad'));
+            return view('voorraad.index', compact('voorraad', 'categorieen', 'geselecteerdeCategorie', 'gefiltered'));
 
         } catch (\Exception $e) {
             Log::error('[Voorraad] Fout bij ophalen overzicht: ' . $e->getMessage());

@@ -1,4 +1,4 @@
-{{-- Voorraad overzicht - User Story: Read --}}
+{{-- Voorraad overzicht - User Story 09: Read --}}
 @extends('layouts.app')
 
 @section('title', 'Voorraad Overzicht - Voedselbank Maaskantje')
@@ -25,15 +25,37 @@
     <div class="card border shadow-sm">
         <div class="card-body p-3">
 
-            {{-- Header --}}
+            {{-- Header: titel links, filter rechts --}}
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="mb-0">
                     <a href="{{ route('voorraad.index') }}" class="text-decoration-none" style="color: #2e7d32;">
                         Overzicht Productvoorraden
                     </a>
                 </h5>
-                <a href="{{ route('dashboard') }}" class="btn btn-sm btn-primary">home</a>
+
+                {{-- Categorie filter --}}
+                <form method="GET" action="{{ route('voorraad.index') }}" class="d-flex align-items-center gap-2">
+                    <select name="categorie_id" class="form-select form-select-sm" style="min-width: 180px;">
+                        <option value="">Selecteer Categorie</option>
+                        @foreach($categorieen as $cat)
+                            <option value="{{ $cat->id }}"
+                                {{ (string)$geselecteerdeCategorie === (string)$cat->id ? 'selected' : '' }}>
+                                {{ $cat->naam }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <button type="submit" name="toon_voorraad" value="1" class="btn btn-sm btn-secondary">
+                        Toon Voorraad
+                    </button>
+                </form>
             </div>
+
+            {{-- Scenario_02: geen producten voor geselecteerde categorie --}}
+            @if($gefiltered && $geselecteerdeCategorie && $voorraad->isEmpty())
+                <div class="alert alert-warning mb-3" role="alert">
+                    Er zijn geen producten bekent die behoren bij de geselecteerde productcategorie
+                </div>
+            @endif
 
             {{-- Tabel --}}
             <div class="table-responsive">
@@ -45,7 +67,6 @@
                             <th>Eenheid</th>
                             <th>Aantal</th>
                             <th>Houdbaarheidsdatum</th>
-                            <th>Magazijn</th>
                             <th>Voorraad Details</th>
                         </tr>
                     </thead>
@@ -57,7 +78,6 @@
                                 <td>{{ $item->verpakkings_eenheid ?? '-' }}</td>
                                 <td>{{ $item->aantal ?? 0 }}</td>
                                 <td>{{ $item->houdbaarheids_datum ? \Carbon\Carbon::parse($item->houdbaarheids_datum)->format('d-m-Y') : '-' }}</td>
-                                <td>{{ $item->locatie ?? '-' }}</td>
                                 <td class="text-center">
                                     <a href="{{ route('voorraad.edit', $item->id) }}"
                                        class="btn btn-sm btn-outline-primary p-1"
@@ -67,14 +87,21 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr>
-                                <td colspan="7" class="text-center text-muted py-3">
-                                    Geen voorraad gevonden.
-                                </td>
-                            </tr>
+                            @if(!$gefiltered || !$geselecteerdeCategorie)
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-3">
+                                        Geen voorraad gevonden.
+                                    </td>
+                                </tr>
+                            @endif
                         @endforelse
                     </tbody>
                 </table>
+            </div>
+
+            {{-- Home knop rechtsonder --}}
+            <div class="d-flex justify-content-end mt-3">
+                <a href="{{ route('dashboard') }}" class="btn btn-sm btn-primary">home</a>
             </div>
 
         </div>
